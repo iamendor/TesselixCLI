@@ -3,9 +3,14 @@
 #include <stdio.h>
 #include "debugmalloc.h"
 #include "menu.h"
+#include <time.h>
+#include <stdlib.h>
+
+
 
 int main(int argc, char const *argv[])
 {    
+    srand(time(NULL));
     head = NULL;
     importMatrices(defIO);
     header(menu);

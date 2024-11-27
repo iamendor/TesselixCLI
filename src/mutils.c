@@ -1,13 +1,45 @@
 #include "mutils.h"
+#include <string.h>
 
+int last = 0;
 
 int scanOption(Menu* points, OnInValid onInvalid, MenuFgv next){
     int option = 0;
     int i;
+    for(i=0; points[i].nev != NULL; i++);
+
+    Matrix* identity = mtrxCreateIdentity(i);
+
+
     for(i=0; points[i].nev != NULL; i++){
-        printf("[%d] %s\n", i+1, points[i].nev);
+        randomColor();
+        printf("[%d] %s", i+1, points[i].nev);
+        int optionLen = 4 + strlen(points[i].nev);
+        for(int k=0; k<(87-optionLen-2-2*identity->width); k++) printf(" ");
+        randomColor();
+        
+        if(i == 0) printf("/ ");
+        else if(i == identity->height -1) printf("\\ ");
+        else printf("| ");   
+        
+        
+        for(int j=0; j<identity->width; j++){
+            randomColor();
+            printf("%d ", (int)identity->data[i][j]);
+        }
+        randomColor();
+    
+        if(i == 0)printf("\\ ");
+        else if(i == identity->height -1) printf("/");
+        else printf("|");
+        printf("\n");
     }
+
+    mtrxFree(identity);
+    
+    randomColor();
     printf("> ");
+    resetColor();
     int scanned = scanf("%d", &option);
     if(scanned != 1 || option > i+1) { 
         onInvalid(next);
@@ -16,21 +48,62 @@ int scanOption(Menu* points, OnInValid onInvalid, MenuFgv next){
     return option;
 }
 
+void resetColor(){
+    printf("\e[0;37m");
+}
+
+void randomColor(){
+    char colorCodes[6][8] = {"\e[0;31m", "\e[0;32m", "\e[0;33m", "\e[0;34m", "\e[0;35m", "\e[0;36m"};
+    int next = rand() % 6;
+    while(next == last){
+        next = rand() % 6;
+    }
+    printf("%s", colorCodes[next]);
+    last = next;
+}
+
 void header(MenuFgv next){
     printf("\033c"); // 
 
-    printf("#####  #####  #####  #####  #####  #      #   #   #\n");
-    printf("  #    #      #      #      #      #      #    # #\n");
-    printf("  #    ####   #####  #####  ####   #      #     #\n");
-    printf("  #    #          #      #  #      #      #    # #\n");
-    printf("  #    #####  #####  #####  #####  #####  #   #   #\n");
+    unsigned int title[8][8] = {
+        { 2046, 2046, 2046, 2046, 2046, 1920, 2046, 1799 }, // 1. sor
+        { 2046, 2046, 2046, 2046, 2046, 1920, 2046, 910 }, // 2. sor
+        { 240, 1792, 1792, 1792, 1792, 1920, 240, 476 }, // 3. sor
+        { 240, 2046, 2046, 2046, 2040, 1920, 240, 248 }, // 4. sor
+        { 240, 2046, 2046, 2046, 2040, 1920, 240, 248 }, // 5. sor
+        { 240, 1792, 14, 14, 1792, 1920, 240, 476 }, // 6. sor
+        { 240, 2046, 2046, 2046, 2046, 2046, 2046, 910 }, // 7. sor
+        { 240, 2046, 2046, 2046, 2046, 2046, 2046, 1799 }, // 8. sor
+    };
 
-    printf("\nEnter the option after the '>' to operate\n");
-    for(int i=0; i<80; i++)printf("-");
+    randomColor();
+    for(int i=0; i<88; i++)printf("*");
     printf("\n");
-    next();
-    return;
+
+    for(int i=0; i<8; i++){
+        for(int j=0; j<8; j++){
+            randomColor();
+            int s = title[i][j];
+            
+            
+            for(int k=0; k<11; k++){
+                if(s >> (10-k) & 1) printf("#");
+                else printf(" ");
+            }
+        }
+        printf("\n");
+    }
+
+    randomColor();
+    for(int i=0; i<88; i++)printf("*");
+
+    randomColor();
+
+    printf("\nEnter the option after the '>' to operate\n\n");
+    resetColor();
+    return next();
 }
+
 
 void insertMatrix(Matrix* mtrx){
     MatrixNode* node = (MatrixNode*)malloc(sizeof(MatrixNode));

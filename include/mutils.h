@@ -19,5 +19,9 @@ void exportMatrices(char* const name);
 void importMatrices(char* const name);
 void chooseTwoMatrix(MatrixNode** nodeA, MatrixNode** nodeB, MenuFgv onError);
 void chooseMatrix(MatrixNode **node, int *a, MenuFgv onError);
+void resetColor();
+void randomColor();
+
+extern int last;
 
 #endif
