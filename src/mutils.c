@@ -82,11 +82,11 @@ void header(MenuFgv next){
 
     for(int i=0; i<8; i++){
         for(int j=0; j<8; j++){
-            randomColor();
             int s = title[i][j];
             
             
             for(int k=0; k<11; k++){
+                randomColor();
                 if(s >> (10-k) & 1) printf("#");
                 else printf(" ");
             }
