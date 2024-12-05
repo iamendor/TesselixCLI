@@ -29,7 +29,8 @@ void menu(){
     };
     int option = scanOption(menupoints, header, menu);
 
-    return header(menupoints[option-1].fgv);
+    header(menupoints[option-1].fgv);
+    clearInput();
 }
 
 
